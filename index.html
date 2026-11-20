@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>System Quest · Galvanometer Physics Lab — MR / OMAR ABD AL HADY</title>
+<style>
+:root{--bg:#0B0E17;--card:#131826;--cy:#00E5FF;--vi:#9D4EDD;--ok:#39FF88;--bad:#FF3B5C;--amb:#FFC93C}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;color:#E8F6FF;font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+body{display:flex;flex-direction:column;height:100dvh;
+ background:radial-gradient(circle at 12% 0%,rgba(157,78,221,.28),transparent 45%),radial-gradient(circle at 100% 100%,rgba(0,229,255,.16),transparent 40%),var(--bg)}
+header{display:flex;align-items:center;gap:14px;padding:8px 12px 4px}
+.logo{height:56px;flex:0 0 auto;animation:pulse 2.6s ease-in-out infinite alternate}
+@keyframes pulse{from{filter:drop-shadow(0 0 4px rgba(0,229,255,.5))}to{filter:drop-shadow(0 0 14px rgba(157,78,221,.95))}}
+.tabs{flex:1;display:flex;gap:8px;min-width:0}
+.tab{flex:1;min-height:56px;min-width:0;cursor:pointer;background:var(--card);color:#9fb6c9;border:3px solid #000;border-radius:8px;
+ box-shadow:0 0 0 2px rgba(157,78,221,.7),4px 4px 0 #000;font:900 14px "Trebuchet MS",sans-serif;letter-spacing:.04em;text-transform:uppercase;padding:4px 8px;line-height:1.15}
+.tab small{display:block;font-weight:700;font-size:11px;opacity:.8;letter-spacing:.02em;text-transform:none}
+.tab.on{color:#001018;background:linear-gradient(135deg,#00E5FF,#8af5ff);box-shadow:0 0 0 2px #00E5FF,0 0 22px #00E5FF,4px 4px 0 #000}
+main{flex:1;min-height:0;display:flex;gap:12px;padding:6px 12px 12px}
+.stage{flex:1 1 60%;min-width:0;position:relative;border:3px solid #000;border-radius:12px;box-shadow:0 0 0 2px var(--cy),0 0 24px rgba(0,229,255,.4);
+ background-color:rgba(8,10,18,.7);background-image:radial-gradient(rgba(157,78,221,.28) 1.3px,transparent 1.7px);background-size:14px 14px;overflow:hidden}
+canvas{width:100%;height:100%;display:block}
+.side{flex:0 0 clamp(400px,40vw,600px);overflow-y:auto;padding:2px 6px 2px 2px;scrollbar-width:thin;scrollbar-color:var(--vi) transparent}
+.panel{display:none}.panel.on{display:block}
+.card{background:var(--card);border:3px solid #000;border-radius:10px;padding:12px 14px;margin-bottom:12px;position:relative;
+ box-shadow:0 0 0 2px var(--cy),0 0 16px rgba(0,229,255,.4),5px 5px 0 #000}
+.card.v{box-shadow:0 0 0 2px var(--vi),0 0 16px rgba(157,78,221,.55),5px 5px 0 #000}
+.card h3{margin:-2px 0 8px;font-size:13px;letter-spacing:.12em;color:var(--cy);text-transform:uppercase;text-shadow:0 0 8px rgba(0,229,255,.7)}
+.card.v h3{color:#C77DFF;text-shadow:0 0 8px rgba(157,78,221,.8)}
+.ctl{margin-bottom:4px}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:13px}
+.row label{font-weight:800;letter-spacing:.04em;color:#bcd2e4}
+.row b{color:var(--amb);font-size:16px;text-shadow:0 0 8px rgba(255,201,60,.5);white-space:nowrap}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:48px;background:transparent;margin:0;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:14px;border-radius:8px;background:linear-gradient(90deg,var(--vi),var(--cy));border:3px solid #000}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:36px;height:36px;border-radius:50%;background:#fff;border:3px solid #000;margin-top:-11px;box-shadow:0 0 0 3px var(--cy),0 0 14px var(--cy)}
+input[type=range]::-moz-range-track{height:8px;border-radius:8px;background:linear-gradient(90deg,var(--vi),var(--cy));border:3px solid #000}
+input[type=range]::-moz-range-thumb{width:30px;height:30px;border-radius:50%;background:#fff;border:3px solid #000;box-shadow:0 0 0 3px var(--cy),0 0 14px var(--cy)}
+.lbl{font-size:12px;font-weight:800;letter-spacing:.1em;color:#8fa9c0;margin:8px 0 5px;text-transform:uppercase}
+.seg{display:flex;gap:8px}.seg.col{flex-direction:column}
+.seg button,.btn{min-height:52px;cursor:pointer;background:#0d1220;color:#9fb6c9;border:3px solid #000;border-radius:8px;padding:6px 10px;
+ font:900 13px "Trebuchet MS",sans-serif;letter-spacing:.03em;box-shadow:0 0 0 2px #2a3550,3px 3px 0 #000;text-align:center;line-height:1.2;flex:1}
+.btn small{font-weight:700;font-size:11px;opacity:.85;letter-spacing:0}
+.seg button.on,.btn.on{background:linear-gradient(135deg,#0a3a48,#2a1450);color:#fff;box-shadow:0 0 0 2px var(--cy),0 0 14px var(--cy),3px 3px 0 #000}
+.seg button.on.warn{box-shadow:0 0 0 2px var(--ok),0 0 14px var(--ok),3px 3px 0 #000}
+.btn:active,.seg button:active,.tab:active{transform:translate(2px,2px)}
+.btn.pre{background:linear-gradient(135deg,#2a1450,#0a3a48);color:#e9d9ff}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.meter{display:grid;grid-template-columns:78px 1fr 110px;gap:8px;align-items:center;margin:6px 0;font-size:13px;font-weight:800}
+.bar{height:22px;border:3px solid #000;border-radius:6px;background:#0a0e1a;position:relative;overflow:hidden}
+.bar:after{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:#fff6}
+.bar i{position:absolute;top:0;bottom:0;left:50%;width:0}
+.meter b{text-align:right;font-size:12px;color:#fff}
+.status{margin-top:8px;min-height:52px;display:flex;align-items:center;justify-content:center;text-align:center;border:3px solid #000;border-radius:8px;font-weight:900;font-size:14px;letter-spacing:.05em;padding:6px}
+.status.move{background:#2b2308;color:var(--amb);box-shadow:0 0 0 2px var(--amb)}
+.status.lock{background:#0c3b24;color:var(--ok);box-shadow:0 0 0 2px var(--ok);animation:flash .6s infinite alternate}
+.status.peg{background:#3b0c18;color:var(--bad);box-shadow:0 0 0 2px var(--bad);animation:flash .35s infinite alternate}
+@keyframes flash{from{filter:brightness(.8)}to{filter:brightness(1.5);box-shadow:0 0 22px currentColor}}
+.rule{display:flex;gap:10px;align-items:flex-start;background:#0d1220;border:2px solid #000;border-radius:8px;padding:8px 10px;margin:7px 0;font-size:13px;line-height:1.5;box-shadow:inset 0 0 0 1px #2a3550}
+.rule .idx{flex:0 0 auto;min-width:30px;height:30px;border-radius:6px;background:linear-gradient(135deg,var(--cy),var(--vi));color:#001018;font-weight:900;display:flex;align-items:center;justify-content:center;border:2px solid #000;padding:0 4px;font-size:13px}
+.rule b.t{color:var(--cy)}
+.rule code{font-family:Consolas,"Courier New",monospace;color:#fff;font-size:12.5px}
+.ok{color:var(--ok);font-weight:900}.bad{color:var(--bad);font-weight:900}.amb{color:var(--amb);font-weight:900}
+table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px}
+th,td{border:2px solid #000;padding:5px 6px;text-align:center;background:#0d1220}th{color:var(--cy);font-size:11px}
+.note{font-size:12.5px;line-height:1.45;color:#a9c0d4;margin:6px 0 2px}
+@media (max-width:900px){main{flex-direction:column;overflow-y:auto}.stage{flex:0 0 55vw}.side{flex:0 0 auto;overflow:visible}header{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<header>
+ <svg class="logo" viewBox="0 0 470 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="System Quest badge: MR / OMAR ABD AL HADY • PHYSICS LAB">
+  <defs>
+   <linearGradient id="lg" x1="0" x2="1"><stop offset="0" stop-color="#00E5FF"/><stop offset="1" stop-color="#9D4EDD"/></linearGradient>
+   <filter id="glow" x="-10%" y="-40%" width="120%" height="180%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <g filter="url(#glow)">
+   <polygon points="12,3 458,3 467,13 467,51 458,61 12,61 3,51 3,13" fill="#0a0f20" stroke="url(#lg)" stroke-width="3"/>
+   <polygon points="12,3 60,3 40,61 12,61 3,51 3,13" fill="#00E5FF" opacity=".12"/>
+   <text x="16" y="21" font-family="Trebuchet MS,Arial,sans-serif" font-size="11" font-weight="900" fill="#00E5FF" letter-spacing="3">◆ SYSTEM QUEST ◆ PLAYER ONLINE</text>
+   <text x="16" y="48" font-family="Trebuchet MS,Arial,sans-serif" font-size="21" font-weight="900" fill="#fff" stroke="#000" stroke-width="4" paint-order="stroke" textLength="438" lengthAdjust="spacingAndGlyphs">MR / OMAR ABD AL HADY • PHYSICS LAB</text>
+  </g>
+ </svg>
+ <nav class="tabs">
+  <button class="tab on" data-tab="1">① Torque &amp; Polarity<small>Galvanometer Lab · Pages 1–6</small></button>
+  <button class="tab" data-tab="2">② Sensitivity &amp; Range<small>S = θ / I · Pages 7–14</small></button>
+  <button class="tab" data-tab="3">③ Ammeter Shunt<small>Magic Rules · Pages 15–28</small></button>
+ </nav>
+</header>
+<main>
+ <section class="stage"><canvas id="cv"></canvas></section>
+ <aside class="side">
+  <div id="p1" class="panel on"></div>
+  <div id="p2" class="panel"></div>
+  <div id="p3" class="panel"></div>
+ </aside>
+</main>
+
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const TAU=Math.PI*2,D2R=Math.PI/180,R2D=180/Math.PI;
+const fmt=(v,d=2)=>Number(v).toFixed(d);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const rnd=(a,b)=>a+Math.random()*(b-a);
+function sl(id,label,min,max,step,val){return `<div class="ctl"><div class="row"><label for="${id}">${label}</label><b id="${id}V"></b></div><input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}"></div>`}
+
+/* ============ CANVAS ============ */
+const cv=$('cv'),ctx=cv.getContext('2d');
+const VW=1000,VH=620;let K=1,scl=1,ox=0,oy=0;
+function resize(){const r=cv.parentElement.getBoundingClientRect();K=window.devicePixelRatio||1;cv.width=Math.max(1,r.width*K);cv.height=Math.max(1,r.height*K);scl=Math.min(r.width/VW,r.height/VH);ox=(r.width-VW*scl)/2;oy=(r.height-VH*scl)/2}
+function beginFrame(){ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);ctx.setTransform(K*scl,0,0,K*scl,K*ox,K*oy);ctx.setLineDash([]);ctx.shadowBlur=0;ctx.globalAlpha=1}
+function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+function ink(fill,lw=3){if(fill){ctx.fillStyle=fill;ctx.fill()}ctx.lineWidth=lw;ctx.strokeStyle='#000';ctx.lineJoin='round';ctx.lineCap='round';ctx.stroke()}
+function txt(s,x,y,size,col,al='center',ol=true){ctx.font=`900 ${size}px "Trebuchet MS","Segoe UI",sans-serif`;ctx.textAlign=al;ctx.textBaseline='middle';
+ if(ol){ctx.lineWidth=Math.max(3,size*.22);ctx.strokeStyle='#000';ctx.lineJoin='round';ctx.strokeText(s,x,y)}ctx.fillStyle=col;ctx.fillText(s,x,y)}
+function panelBox(x,y,w,h,title,col='#00E5FF'){rr(x,y,w,h,14);ctx.fillStyle='rgba(16,21,35,.93)';ctx.fill();
+ ctx.save();ctx.shadowColor=col;ctx.shadowBlur=14;ctx.lineWidth=2.5;ctx.strokeStyle=col;ctx.stroke();ctx.restore();
+ if(title)txt(title,x+w/2,y+22,14,col,'center')}
+function arrow(x1,y1,x2,y2,col,w=6){const a=Math.atan2(y2-y1,x2-x1),hl=19,hw=12,ca=Math.cos(a),sa=Math.sin(a);
+ const bx=x2-ca*hl*.7,by=y2-sa*hl*.7;
+ ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(bx,by);ctx.lineWidth=w+6;ctx.strokeStyle='#000';ctx.lineCap='round';ctx.stroke();
+ ctx.beginPath();ctx.moveTo(x2+ca*2,y2+sa*2);ctx.lineTo(x2-ca*hl+sa*hw,y2-sa*hl-ca*hw);ctx.lineTo(x2-ca*hl-sa*hw,y2-sa*hl+ca*hw);ctx.closePath();ink(col,3);
+ ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(bx,by);ctx.lineWidth=w;ctx.strokeStyle=col;ctx.stroke()}
+
+/* particle FX: sparks + smoke */
+function newFx(){return{sp:[],sm:[],acc:0}}
+function fxEmit(fx,x,y,dt){fx.acc+=dt*70;while(fx.acc>1){fx.acc--;const a=rnd(0,TAU),v=rnd(80,280);
+ fx.sp.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-80,l:rnd(.25,.6),m:.6});
+ if(Math.random()<.5)fx.sm.push({x:x+rnd(-8,8),y,vx:rnd(-14,14),vy:-rnd(35,80),r:rnd(6,10),l:1.6,m:1.6})}}
+function fxUpdate(fx,dt){for(const p of fx.sp){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=380*dt;p.l-=dt}
+ for(const p of fx.sm){p.x+=p.vx*dt;p.y+=p.vy*dt;p.r+=22*dt;p.l-=dt}
+ fx.sp=fx.sp.filter(p=>p.l>0);fx.sm=fx.sm.filter(p=>p.l>0)}
+function fxDraw(fx){for(const p of fx.sm){ctx.globalAlpha=clamp(p.l/p.m,0,1)*.55;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,TAU);ctx.fillStyle='#8b8f9c';ctx.fill();ctx.lineWidth=2;ctx.strokeStyle='#000';ctx.stroke()}
+ ctx.globalAlpha=1;ctx.save();ctx.shadowColor='#FFB020';ctx.shadowBlur=10;ctx.lineCap='round';
+ for(const p of fx.sp){ctx.globalAlpha=clamp(p.l/p.m,0,1);ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*.04,p.y-p.vy*.04);ctx.lineWidth=3;ctx.strokeStyle=Math.random()<.5?'#FFE066':'#FF7A1A';ctx.stroke()}
+ ctx.restore();ctx.globalAlpha=1}
+
+/* ============ TAB 1 : TORQUE LAB ============ */
+const A_COIL=6e-4,J_INERT=2e-5,LIM=1.48;
+const T1={I:15,conc:true,iron:true,N:200,k:8.6,th:0,w:0,hold:0,tmag:0,tsp:0,status:'move',B:.25,f:1};
+$('p1').innerHTML=`
+<div class="card"><h3>◈ System Controls — Torque Lab</h3>
+ ${sl('s1I','DC CURRENT (I)',-30,30,0.5,15)}
+ ${sl('s1N','COIL TURNS (N)',50,500,10,200)}
+ ${sl('s1k','SPIRAL SPRING STIFFNESS (k)',4,20,0.1,8.6)}
+ <div class="lbl">Magnet pole geometry</div>
+ <div class="seg col" data-id="pole">
+  <button data-v="conc" class="on">CONCAVE POLES (Radial Uniform Flux, θ = 90°)</button>
+  <button data-v="flat">FLAT POLES (Non-uniform angle)</button></div>
+ <div class="lbl">Soft iron core</div>
+ <div class="seg col" data-id="core">
+  <button data-v="iron" class="on">WITH IRON CORE (High Permeability μ → Boosts B)</button>
+  <button data-v="air">AIR CORE</button></div>
+</div>
+<div class="card v"><h3>◈ Live Torque Equilibrium Meter</h3>
+ <div class="meter"><span style="color:#39FF88">τ_mag</span><div class="bar"><i id="barMag" style="background:#39FF88"></i></div><b id="tMag"></b></div>
+ <div class="meter"><span style="color:#FF9F1C">τ_spring</span><div class="bar"><i id="barSp" style="background:#FF9F1C"></i></div><b id="tSp"></b></div>
+ <div class="meter"><span style="color:#C77DFF">NET τ</span><div class="bar"><i id="barNet" style="background:#C77DFF"></i></div><b id="tNet"></b></div>
+ <div id="eq" class="status move"></div>
+</div>
+<div class="card"><h3>◈ Live Equations</h3><div id="eqs1"></div></div>`;
+
+const seg1={pole:v=>{T1.conc=v==='conc'},core:v=>{T1.iron=v==='iron'}};
+function bindSl1(){
+ const map=[['s1I',v=>{T1.I=v},v=>(v>0?'+':'')+fmt(v,1)+' mA'],['s1N',v=>{T1.N=v},v=>v+' turns'],['s1k',v=>{T1.k=v},v=>fmt(v,1)+' ×10⁻⁴ N·m/rad']];
+ map.forEach(([id,fn,lab])=>{const el=$(id);const upd=()=>{fn(parseFloat(el.value));$(id+'V').textContent=lab(parseFloat(el.value))};el.addEventListener('input',upd);upd()});
+}
+function step1(dt){
+ const B=T1.iron?.25:.10,I=T1.I/1000,k=T1.k*1e-4,c=2*.45*Math.sqrt(k*J_INERT);
+ const n=Math.max(1,Math.ceil(dt/.004)),h=dt/n;
+ for(let i=0;i<n;i++){const f=T1.conc?1:Math.cos(T1.th);const tm=B*I*A_COIL*T1.N*f;const a=(tm-k*T1.th-c*T1.w)/J_INERT;
+  T1.w+=a*h;T1.th+=T1.w*h;
+  if(T1.th>LIM){T1.th=LIM;if(T1.w>0)T1.w=0}if(T1.th<-LIM){T1.th=-LIM;if(T1.w<0)T1.w=0}}
+ T1.B=B;T1.f=T1.conc?1:Math.cos(T1.th);T1.tmag=B*I*A_COIL*T1.N*T1.f;T1.tsp=k*T1.th;
+ const net=T1.tmag-T1.tsp,sc=Math.max(Math.abs(T1.tmag),Math.abs(T1.tsp),3e-5);
+ const settled=Math.abs(T1.w)<.04&&Math.abs(net)<.03*sc;T1.hold=settled?T1.hold+dt:0;
+ T1.status=(Math.abs(T1.th)>=LIM-.002&&Math.abs(net)>.03*sc)?'peg':(T1.hold>.3?'lock':'move')}
+function setBar(id,v){const p=clamp(Math.abs(v)/1.2e-3,0,1)*50,e=$(id);e.style.width=p+'%';e.style.left=(v>=0?50:50-p)+'%'}
+function hud1(){
+ const net=T1.tmag-T1.tsp,tq=v=>fmt(v*1e4,2)+' ×10⁻⁴';
+ $('tMag').textContent=tq(T1.tmag);$('tSp').textContent=tq(T1.tsp);$('tNet').textContent=tq(net);
+ setBar('barMag',T1.tmag);setBar('barSp',T1.tsp);setBar('barNet',net);
+ const e=$('eq'),st=T1.status;e.className='status '+st;
+ e.textContent=st==='lock'?'✔ EQUILIBRIUM LOCKED: NET TORQUE = 0':st==='peg'?'⚠ POINTER PEGGED AT STOP — REDUCE I OR N':'… NEEDLE MOVING: τ_mag ≠ τ_spring';
+ const th=T1.th*R2D,phi=T1.conc?90:90-Math.abs(th),I=T1.I/1000;
+ const pol=T1.I>0?'POSITIVE → needle right of zero':T1.I<0?'NEGATIVE → needle left of zero (center-zero scale!)':'ZERO current → needle at 0';
+ $('eqs1').innerHTML=`
+ <div class="rule"><span class="idx">τm</span><div><b class="t">τ_mag = B·I·A·N·sin φ</b><br><code>${fmt(T1.B,2)} × ${fmt(I,4)} × 6.0e-4 × ${T1.N} × ${fmt(Math.sin(phi*D2R),3)} = ${fmt(T1.tmag*1e4,3)}×10⁻⁴ N·m</code><br>B = ${fmt(T1.B,2)} T ${T1.iron?'(iron core ×2.5)':'(air core)'} · φ = ${fmt(phi,1)}° ${T1.conc?'(radial field ⇒ sin φ = 1 always)':'(flat: sin φ = cos θ ⇒ torque shrinks as coil turns)'}</div></div>
+ <div class="rule"><span class="idx">τs</span><div><b class="t">τ_spring = k·θ</b><br><code>${fmt(T1.k,1)}×10⁻⁴ × ${fmt(T1.th,3)} rad = ${fmt(T1.tsp*1e4,3)}×10⁻⁴ N·m</code><br>Equilibrium when τ_mag = τ_spring ⇒ ${T1.conc?'θ = B·I·A·N / k':'k·θ = B·I·A·N·cos θ'}</div></div>
+ <div class="rule"><span class="idx">θ</span><div>Deflection θ = <b class="amb">${fmt(th,1)}°</b> · Force on each coil side F = B·I·L·N<br>Dial reads <b class="amb">${fmt(th/2,1)} mA</b> (scale calibrated for default device: 2°/mA)<br><span class="${T1.I===0?'':'ok'}">${pol}</span></div></div>`;
+}
+
+function drawFlux(cx,cy,t){
+ const iron=T1.iron,conc=T1.conc,Rc=52,Rp=96;
+ ctx.save();ctx.lineCap='round';ctx.strokeStyle='#00E5FF';ctx.shadowColor='#00E5FF';ctx.shadowBlur=10;
+ ctx.lineWidth=iron?3.4:2;ctx.globalAlpha=iron?.95:.6;ctx.setLineDash([12,9]);ctx.lineDashOffset=-t*45;
+ const ln=(a,b,c,d)=>{ctx.beginPath();ctx.moveTo(a,b);ctx.lineTo(c,d);ctx.stroke()};
+ if(conc&&iron){const n=9,a=.8;for(let i=0;i<n;i++){const f=-a+2*a*i/(n-1);
+  let an=Math.PI+f;ln(cx+Math.cos(an)*(Rp-2),cy+Math.sin(an)*(Rp-2),cx+Math.cos(an)*(Rc+3),cy+Math.sin(an)*(Rc+3));
+  an=f;ln(cx+Math.cos(an)*(Rc+3),cy+Math.sin(an)*(Rc+3),cx+Math.cos(an)*(Rp-2),cy+Math.sin(an)*(Rp-2))}}
+ else if(!conc&&iron){for(let i=0;i<9;i++){const yo=-85+170*i/8,d=Math.hypot(100,yo),ux=-100/d,uy=yo/d;
+  ln(cx-98,cy+yo,cx+ux*(Rc+3),cy+uy*(Rc+3));ln(cx-ux*(Rc+3),cy+uy*(Rc+3),cx+98,cy+yo)}}
+ else{for(let i=0;i<5;i++){const yo=-70+35*i;const half=conc?Math.sqrt(Rp*Rp-yo*yo)-2:98;ln(cx-half,cy+yo,cx+half,cy+yo)}}
+ ctx.restore()}
+function sideSym(x,y,kind){ctx.beginPath();ctx.arc(x,y,13,0,TAU);ink('#FF9F1C');
+ ctx.beginPath();ctx.arc(x-4,y-4,4.5,0,TAU);ctx.fillStyle='rgba(255,255,255,.55)';ctx.fill();
+ if(kind==='out'){ctx.beginPath();ctx.arc(x,y,4.5,0,TAU);ctx.fillStyle='#000';ctx.fill()}
+ else if(kind==='in'){ctx.beginPath();ctx.moveTo(x-6,y-6);ctx.lineTo(x+6,y+6);ctx.moveTo(x+6,y-6);ctx.lineTo(x-6,y+6);ctx.lineWidth=3.4;ctx.strokeStyle='#000';ctx.stroke()}}
+function drawTop(t){
+ const cx=250,cy=330,Rc=52,Rg=78,Rp=96,mh=125,conc=T1.conc,iron=T1.iron,th=T1.th,I=T1.I/1000,s=Math.sign(I);
+ const blk=(x,w,c,c2)=>{rr(x,cy-mh,w,2*mh,8);ink(c);ctx.fillStyle='rgba(255,255,255,.28)';ctx.fillRect(x+8,cy-mh+10,12,2*mh-20);ctx.fillStyle=c2;ctx.fillRect(x+w-22,cy-mh+10,12,2*mh-20)};
+ if(conc){blk(cx-228,100,'#E63946','#B3202E');blk(cx+128,100,'#2F6BFF','#1F47B3');
+  const pole=(sg,fill)=>{const a=.95,a0=sg<0?Math.PI-a:-a,a1=sg<0?Math.PI+a:a;ctx.beginPath();ctx.arc(cx,cy,Rp,a0,a1);
+   const xo=cx+sg*130;ctx.lineTo(xo,cy+Rp*Math.sin(a1));ctx.lineTo(xo,cy+Rp*Math.sin(a0));ctx.closePath();ink(fill)};
+  pole(-1,'#C92D3B');pole(1,'#2558D6')}
+ else{blk(cx-228,128,'#E63946','#B3202E');blk(cx+100,128,'#2F6BFF','#1F47B3')}
+ txt('N',cx-(conc?178:166),cy-mh+30,34,'#fff');txt('S',cx+(conc?178:166),cy-mh+30,34,'#fff');
+ if(iron){ctx.save();ctx.shadowColor='#9D4EDD';ctx.shadowBlur=20+7*Math.sin(t*3);ctx.beginPath();ctx.arc(cx,cy,Rc,0,TAU);ink('#7C879B');ctx.restore();
+  ctx.save();ctx.beginPath();ctx.arc(cx,cy,Rc,0,TAU);ctx.clip();ctx.fillStyle='#A9B4C8';ctx.beginPath();ctx.arc(cx-9,cy-9,Rc-9,0,TAU);ctx.fill();
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.ellipse(cx-26,cy-28,9,5,-.7,0,TAU);ctx.fill();ctx.restore();
+  ctx.beginPath();ctx.arc(cx,cy,Rc,0,TAU);ctx.lineWidth=3;ctx.strokeStyle='#000';ctx.stroke()}
+ else{ctx.setLineDash([6,6]);ctx.beginPath();ctx.arc(cx,cy,Rc,0,TAU);ctx.lineWidth=2;ctx.strokeStyle='#7b8aa3';ctx.stroke();ctx.setLineDash([])}
+ drawFlux(cx,cy,t);
+ ctx.setLineDash([5,6]);ctx.beginPath();ctx.moveTo(cx-Rg-26,cy);ctx.lineTo(cx+Rg+26,cy);ctx.lineWidth=1.6;ctx.strokeStyle='rgba(255,255,255,.4)';ctx.stroke();ctx.setLineDash([]);
+ if(Math.abs(th)>.02){ctx.beginPath();ctx.arc(cx,cy,34,Math.PI,Math.PI+th,th<0);ctx.lineWidth=3;ctx.strokeStyle='#FFC93C';ctx.stroke()}
+ const lx=cx-Rg*Math.cos(th),ly=cy-Rg*Math.sin(th),rx=cx+Rg*Math.cos(th),ry=cy+Rg*Math.sin(th);
+ ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(rx,ry);ctx.lineWidth=13;ctx.strokeStyle='#000';ctx.lineCap='round';ctx.stroke();
+ ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(rx,ry);ctx.lineWidth=7;ctx.strokeStyle='#E8891A';ctx.stroke();
+ ctx.beginPath();ctx.moveTo(lx,ly-2);ctx.lineTo(rx,ry-2);ctx.lineWidth=2;ctx.strokeStyle='rgba(255,255,255,.5)';ctx.stroke();
+ ctx.beginPath();ctx.arc(cx,cy,9,0,TAU);ink('#222');ctx.beginPath();ctx.arc(cx,cy,3,0,TAU);ctx.fillStyle='#00E5FF';ctx.fill();
+ sideSym(lx,ly,s>0?'out':s<0?'in':0);sideSym(rx,ry,s>0?'in':s<0?'out':0);
+ if(s!==0){const len=18+78*clamp(T1.B*Math.abs(I)/(.25*.03),0,1);
+  let dx,dy;if(conc){dx=Math.sin(th);dy=-Math.cos(th)}else{dx=0;dy=-1}
+  dx*=s;dy*=s;
+  arrow(lx,ly,lx+dx*len,ly+dy*len,'#39FF88',6);arrow(rx,ry,rx-dx*len,ry-dy*len,'#39FF88',6);
+  txt('F',lx+dx*len-20,ly+dy*len+(dy<0?-14:14),18,'#39FF88');
+  txt('F',rx-dx*len+20,ry-dy*len+(dy>0?-14:14),18,'#39FF88')}
+ txt('● out of page   ✕ into page',cx,98,13,'#FFC93C');
+ txt('F = B·I·L  (green arrows)',cx,118,13,'#39FF88');
+ txt(conc?'CONCAVE POLES · RADIAL FIELD':'FLAT POLES · NON-UNIFORM FIELD',cx,490,14,'#00E5FF');
+ txt(iron?'SOFT IRON CORE ⇒ STRONGER B':'AIR CORE ⇒ WEAK B',cx,512,14,iron?'#C77DFF':'#9fb6c9');
+ txt(`θ = ${fmt(th*R2D,1)}°`,cx-70,552,22,'#FFC93C');txt(`B = ${fmt(T1.B,2)} T`,cx+75,552,22,'#00E5FF');
+ txt(`φ = ${conc?'90.0':fmt(90-Math.abs(th*R2D),1)}°   sin φ = ${fmt(T1.f,3)}`,cx,583,14,'#E8F6FF')}
+function dialCZ(cx,cy,R,th){
+ const face=()=>{ctx.beginPath();ctx.arc(cx,cy,R,Math.PI,TAU);ctx.closePath()};
+ face();ctx.fillStyle='#F3ECD2';ctx.fill();ctx.save();face();ctx.clip();
+ ctx.fillStyle='rgba(150,120,60,.28)';ctx.beginPath();ctx.moveTo(cx+R*.4,cy-R);ctx.lineTo(cx+R,cy-R);ctx.lineTo(cx+R,cy);ctx.lineTo(cx+R*.6,cy);ctx.closePath();ctx.fill();
+ ctx.fillStyle='rgba(255,255,255,.55)';ctx.beginPath();ctx.moveTo(cx-R*.8,cy-R*.5);ctx.lineTo(cx-R*.55,cy-R*.75);ctx.lineTo(cx-R*.5,cy-R*.62);ctx.lineTo(cx-R*.72,cy-R*.42);ctx.fill();ctx.restore();
+ face();ctx.lineWidth=4;ctx.strokeStyle='#000';ctx.stroke();
+ ctx.lineCap='butt';ctx.lineWidth=8;ctx.strokeStyle='#E63946';
+ ctx.beginPath();ctx.arc(cx,cy,R-12,(-90+62)*D2R,(-90+88)*D2R);ctx.stroke();ctx.beginPath();ctx.arc(cx,cy,R-12,(-90-88)*D2R,(-90-62)*D2R);ctx.stroke();
+ for(let v=-30;v<=30;v++){const a=(-90+v*2)*D2R,maj=v%10===0,mid=v%5===0,r1=R-6,r2=r1-(maj?28:mid?19:11);
+  ctx.beginPath();ctx.moveTo(cx+Math.cos(a)*r1,cy+Math.sin(a)*r1);ctx.lineTo(cx+Math.cos(a)*r2,cy+Math.sin(a)*r2);ctx.lineWidth=maj?3.6:1.8;ctx.strokeStyle=v===0?'#E63946':'#111';ctx.stroke();
+  if(maj){const rl=R-62;txt(v>0?'+'+v:''+v,cx+Math.cos(a)*rl,cy+Math.sin(a)*rl,19,v===0?'#E63946':'#111','center',false)}}
+ txt('mA',cx,cy-R*.48,16,'#333','center',false);txt('CENTER-ZERO',cx,cy-R*.34,13,'#555','center',false);
+ ctx.save();ctx.translate(cx,cy);ctx.rotate(th);
+ ctx.beginPath();ctx.moveTo(-5,18);ctx.lineTo(-2.5,-(R-14));ctx.lineTo(0,-(R-2));ctx.lineTo(2.5,-(R-14));ctx.lineTo(5,18);ctx.closePath();ink('#E63946',3);
+ ctx.beginPath();ctx.moveTo(-1,-8);ctx.lineTo(-.5,-(R-20));ctx.lineWidth=1.5;ctx.strokeStyle='rgba(255,255,255,.7)';ctx.stroke();ctx.restore();
+ ctx.beginPath();ctx.arc(cx,cy,14,0,TAU);ink('#1a1f33');ctx.beginPath();ctx.arc(cx,cy,5,0,TAU);ctx.fillStyle='#00E5FF';ctx.fill()}
+function spring(cx,cy,th,dir){const n=100,turns=3.2;ctx.beginPath();
+ for(let i=0;i<=n;i++){const u=i/n,r=6+u*34,a=u*turns*TAU+(1-u)*th*2.4*dir;const x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r*.38;i?ctx.lineTo(x,y):ctx.moveTo(x,y)}
+ ctx.lineWidth=6;ctx.strokeStyle='#000';ctx.stroke();ctx.lineWidth=2.8;ctx.strokeStyle='#E6EBF2';ctx.stroke()}
+function drawCut(t){
+ const cx=745,th=T1.th,iron=T1.iron;
+ const pole=(x1,x2,xc,c,l)=>{ctx.beginPath();ctx.moveTo(x1,395);ctx.lineTo(x2,395);ctx.quadraticCurveTo(xc,467,x2,540);ctx.lineTo(x1,540);ctx.closePath();ink(c);
+  ctx.fillStyle='rgba(255,255,255,.3)';ctx.fillRect(Math.min(x1,x2)+(l?10:0),405,12,125);txt(l?'N':'S',(x1+x2)/2+(l?-8:8),467,40,'#fff')};
+ pole(540,625,590,'#E63946',true);pole(950,865,900,'#2F6BFF',false);
+ ctx.beginPath();ctx.moveTo(cx,338);ctx.lineTo(cx,590);ctx.lineWidth=9;ctx.strokeStyle='#000';ctx.lineCap='round';ctx.stroke();ctx.lineWidth=4;ctx.strokeStyle='#B8C2D2';ctx.stroke();
+ if(iron){ctx.save();ctx.shadowColor='#9D4EDD';ctx.shadowBlur=18+6*Math.sin(t*3);ctx.fillStyle='#7C879B';ctx.fillRect(693,410,104,120);ctx.restore();
+  ctx.fillStyle='#A9B4C8';ctx.fillRect(693,410,48,120);ctx.fillStyle='#5F6A7E';ctx.fillRect(775,410,22,120);
+  ctx.beginPath();ctx.ellipse(cx,530,52,14,0,0,Math.PI);ink('#5F6A7E');ctx.lineWidth=3;ctx.strokeStyle='#000';ctx.strokeRect(693,410,104,120);
+  ctx.beginPath();ctx.ellipse(cx,410,52,14,0,0,TAU);ink('#C6D0E2');txt('SOFT IRON',cx,470,14,'#0B0E17','center',false);txt('CORE',cx,488,14,'#0B0E17','center',false)}
+ else{ctx.setLineDash([6,6]);ctx.strokeStyle='#7b8aa3';ctx.lineWidth=2;ctx.strokeRect(693,410,104,120);ctx.setLineDash([]);txt('AIR',cx,470,16,'#9fb6c9')}
+ spring(cx,352,th,1);spring(cx,574,th,-1);
+ const hw=75*Math.cos(th),xl=cx-hw,xr=cx+hw,nt=3;
+ ctx.lineJoin='round';
+ for(let p=0;p<2;p++){for(let i=0;i<nt;i++){const d=i*4;ctx.beginPath();ctx.rect(xl-d,382-d*.5,xr-xl+2*d,172+d);ctx.lineWidth=p?4.5:9;ctx.strokeStyle=p?'#FF9F1C':'#000';ctx.stroke()}}
+ ctx.beginPath();ctx.moveTo(xl-1,390);ctx.lineTo(xl-1,545);ctx.lineWidth=1.8;ctx.strokeStyle='rgba(255,255,255,.55)';ctx.stroke();
+ const s=Math.sign(T1.I);
+ if(s!==0){const dot=(x,toward)=>{ctx.beginPath();ctx.arc(x,468,13,0,TAU);ink('#39FF88');
+  if(toward){ctx.beginPath();ctx.arc(x,468,4.5,0,TAU);ctx.fillStyle='#000';ctx.fill()}
+  else{ctx.beginPath();ctx.moveTo(x-6,462);ctx.lineTo(x+6,474);ctx.moveTo(x+6,462);ctx.lineTo(x-6,474);ctx.lineWidth=3.4;ctx.strokeStyle='#000';ctx.stroke()}};
+  dot(xl-17,s<0);dot(xr+17,s>0)}
+ txt('SPIRAL SPRING  τ = kθ',cx,326,13,'#E6EBF2');txt('SPIRAL SPRING',cx,596,12,'#E6EBF2');
+ txt('COIL (N turns)',cx+150,376,12,'#FF9F1C');
+}
+function draw1(t){
+ txt('EXPERIMENT 1 · τ_mag = B·I·A·N·sin φ   vs   τ_spring = k·θ',500,26,16,'#00E5FF');
+ panelBox(14,48,472,562,'TOP-DOWN VIEW · FIELD & FORCES');panelBox(500,48,486,562,'3D CUTAWAY · CENTER-ZERO DIAL','#9D4EDD');
+ drawTop(t);dialCZ(745,282,176,T1.th);drawCut(t)}
+
+/* ============ TAB 2 : SENSITIVITY LAB ============ */
+const T2={mode:'dual',I:.005,unit:1e-3,sel:0,dev:[{B:.25,A:6,N:400,k:3.8197},{B:.25,A:6,N:40,k:3.8197}],rec:[[],[]],st:[{th:0,w:0},{th:0,w:0}],fx:[newFx(),newFx()]};
+const MODES={
+ dual:{dev:[{B:.25,A:6,N:400,k:3.8197},{B:.25,A:6,N:40,k:3.8197}],I:.005,unit:1e-3,max:100,step:.5,note:'G₁ and G₂ receive the <b>same current</b>. G₁ (N = 400) is 10× more sensitive than G₂ (N = 40) so its F.S.D. is 10× smaller. Push I above 10 mA to overload G₁!'},
+ A:{dev:[{B:.25,A:6,N:100,k:85.944}],I:.5,unit:1e-3,max:1000,step:10,note:'<b>Page 12:</b> θ = 50° at I = 500 mA ⇒ S = θ / I = 50° ÷ 0.5 A = <b>100 °/A</b>. Slide I — θ changes but S stays constant!'},
+ B:{dev:[{B:.25,A:6,N:1000,k:.59683}],I:50e-6,unit:1e-6,max:700,step:5,note:'<b>Page 29:</b> 50 μA per 2 divisions, scale of 25 divisions ⇒ S = 2 div / 50 μA = 0.04 div/μA ⇒ <b>F.S.D. = 25 × 50 / 2 = 625 μA</b>.'}};
+$('p2').innerHTML=`
+<div class="card"><h3>◈ System Controls — Sensitivity Lab</h3>
+ <div class="lbl">Experiment mode</div>
+ <button class="btn on" id="mDual" style="width:100%">SIDE-BY-SIDE DUAL METER: G₁ (10 mA) vs G₂ (100 mA)</button>
+ <div class="grid2" style="margin-top:8px">
+  <button class="btn pre" id="mA">PRESET A (Page 12)<br><small>θ = 50° at I = 500 mA</small></button>
+  <button class="btn pre" id="mB">PRESET B (Page 29)<br><small>50 μA / 2 div · 25 div</small></button></div>
+ <div class="note" id="note2"></div>
+ ${sl('s2I','TEST CURRENT (I)',0,100,.5,5)}
+ <div class="lbl">Edit internal parameters of device</div>
+ <div class="seg" id="sel2"><button data-v="0" class="on">G₁</button><button data-v="1" id="selG2">G₂</button></div>
+ ${sl('s2B','MAGNETIC FIELD (B)',.05,.5,.01,.25)}
+ ${sl('s2A','COIL AREA (A)',1,12,.5,6)}
+ ${sl('s2N','COIL TURNS (N)',10,1000,10,400)}
+ ${sl('s2k','SPRING STIFFNESS (k)',0,300,1,100)}
+</div>
+<div class="card v"><h3>◈ Live Equations & Readout</h3><div id="eqs2"></div>
+ <button class="btn" id="recBtn" style="width:100%;margin-top:6px">⏺ RECORD READING (I, θ, S)</button>
+ <div id="rec2"></div></div>`;
+const kFromV=v=>Math.pow(10,v/100-1),vFromK=k=>Math.round((Math.log10(k)+1)*100);
+const Sdeg=d=>d.B*d.A*1e-4*d.N/(d.k*1e-4)*R2D;
+const fI=a=>a===0?'0 mA':a>=1?fmt(a,2)+' A':a>=1e-3-1e-12?(a*1e3).toFixed(a*1e3>=100?0:a*1e3>=10?1:2)+' mA':(a*1e6).toFixed(0)+' μA';
+const fS=s=>(s>=1000?s.toFixed(0):s>=100?s.toFixed(1):s.toFixed(2))+' °/A';
+function syncDev(){const d=T2.dev[T2.sel];
+ $('s2B').value=d.B;$('s2A').value=d.A;$('s2N').value=d.N;$('s2k').value=vFromK(d.k);
+ $('s2BV').textContent=fmt(d.B,2)+' T';$('s2AV').textContent=fmt(d.A,1)+' cm²';$('s2NV').textContent=d.N+' turns';$('s2kV').textContent=fmt(d.k,2)+' ×10⁻⁴ N·m/rad'}
+function updI2(){const v=parseFloat($('s2I').value);T2.I=v*T2.unit;$('s2IV').textContent=fI(T2.I)}
+function setMode2(m){const c=MODES[m];T2.mode=m;T2.dev=c.dev.map(d=>({...d}));T2.unit=c.unit;T2.sel=0;T2.rec=[[],[]];
+ const s=$('s2I');s.min=0;s.max=c.max;s.step=c.step;s.value=Math.round(c.I/c.unit*1000)/1000;
+ $('note2').innerHTML=c.note;$('selG2').style.display=m==='dual'?'':'none';
+ document.querySelectorAll('#sel2 button').forEach(b=>b.classList.toggle('on',b.dataset.v==='0'));
+ $('mDual').classList.toggle('on',m==='dual');$('mA').classList.toggle('on',m==='A');$('mB').classList.toggle('on',m==='B');
+ $('sel2').firstElementChild.textContent=m==='dual'?'G₁':'CLASSWORK GALVANOMETER';
+ updI2();syncDev();T2.st.forEach(s=>{s.th=0;s.w=0});T2.fx=[newFx(),newFx()]}
+function bind2(){
+ $('s2I').addEventListener('input',updI2);
+ const pm=(id,key,lab,conv)=>$(id).addEventListener('input',()=>{const v=parseFloat($(id).value);T2.dev[T2.sel][key]=conv?conv(v):v;$(id+'V').textContent=lab(T2.dev[T2.sel][key]);T2.rec=[[],[]]});
+ pm('s2B','B',v=>fmt(v,2)+' T');pm('s2A','A',v=>fmt(v,1)+' cm²');pm('s2N','N',v=>v+' turns');pm('s2k','k',v=>fmt(v,2)+' ×10⁻⁴ N·m/rad',kFromV);
+ $('mDual').onclick=()=>setMode2('dual');$('mA').onclick=()=>setMode2('A');$('mB').onclick=()=>setMode2('B');
+ $('sel2').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;T2.sel=parseInt(b.dataset.v);document.querySelectorAll('#sel2 button').forEach(x=>x.classList.toggle('on',x===b));syncDev()});
+ $('recBtn').onclick=()=>{const devs=T2.mode==='dual'?[0,1]:[0];devs.forEach(i=>{const Sd=Sdeg(T2.dev[i]),raw=Sd*T2.I;if(T2.I>0&&raw<=90.0001){T2.rec[i].push({I:T2.I,th:raw,S:raw/T2.I});if(T2.rec[i].length>5)T2.rec[i].shift()}});hud2()};
+ setMode2('dual')}
+function lay2(j){return T2.mode==='dual'?{cx:250+j*500,cy:340,R:195,x:14+j*492,w:480}:{cx:500,cy:340,R:215,x:14,w:972}}
+function step2(dt){const devs=T2.mode==='dual'?[0,1]:[0];
+ devs.forEach(i=>{const raw=Sdeg(T2.dev[i])*T2.I,tg=Math.min(raw,100),s=T2.st[i];const w0=13,z=.5;
+  const n=Math.max(1,Math.ceil(dt/.005)),h=dt/n;for(let k=0;k<n;k++){const a=w0*w0*(tg-s.th)-2*z*w0*s.w;s.w+=a*h;s.th+=s.w*h}
+  s.th=clamp(s.th,-2,100);
+  if(raw>90.0001){const L=lay2(i),a=(-135+s.th)*D2R;fxEmit(T2.fx[i],L.cx+Math.cos(a)*L.R*.8,L.cy+Math.sin(a)*L.R*.8,dt)}});
+ T2.fx.forEach(f=>fxUpdate(f,dt))}
+function drawDialDeg(cx,cy,R,thDeg,kind,t,over){
+ const face=()=>{ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,R,-145*D2R,-35*D2R);ctx.closePath()};
+ face();ctx.fillStyle='#F3ECD2';ctx.fill();ctx.save();face();ctx.clip();
+ ctx.fillStyle='rgba(150,120,60,.25)';ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,R,-70*D2R,-35*D2R);ctx.closePath();ctx.fill();
+ ctx.fillStyle='rgba(255,255,255,.5)';ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,R,-145*D2R,-128*D2R);ctx.closePath();ctx.fill();ctx.restore();
+ face();ctx.lineWidth=4;ctx.strokeStyle='#000';ctx.lineJoin='round';ctx.stroke();
+ ctx.lineCap='butt';ctx.lineWidth=9;ctx.strokeStyle='#E63946';ctx.beginPath();ctx.arc(cx,cy,R-12,-45*D2R,-36*D2R);ctx.stroke();
+ const total=kind==='div'?25:90,stp=kind==='div'?1:2.5,maj=kind==='div'?5:10;
+ for(let v=0;v<=total+1e-9;v+=stp){const th=v*90/total,a=(-135+th)*D2R,isM=Math.abs(v/maj-Math.round(v/maj))<1e-6,isH=!isM&&kind==='deg'&&Math.abs(v/5-Math.round(v/5))<1e-6;
+  const r1=R-6,r2=r1-(isM?26:isH?18:11);ctx.beginPath();ctx.moveTo(cx+Math.cos(a)*r1,cy+Math.sin(a)*r1);ctx.lineTo(cx+Math.cos(a)*r2,cy+Math.sin(a)*r2);ctx.lineWidth=isM?3.6:1.8;ctx.strokeStyle='#111';ctx.stroke();
+  if(isM)txt(String(Math.round(v)),cx+Math.cos(a)*(R-56),cy+Math.sin(a)*(R-56),18,'#111','center',false)}
+ txt(kind==='div'?'DIVISIONS':'DEGREES (θ)',cx,cy-R*.42,14,'#555','center',false);
+ ctx.save();ctx.translate(cx,cy);ctx.rotate((-135+thDeg+(over?Math.sin(t*70)*1.3:0))*D2R);
+ ctx.beginPath();ctx.moveTo(-26,-5);ctx.lineTo(R-12,-2);ctx.lineTo(R-3,0);ctx.lineTo(R-12,2);ctx.lineTo(-26,5);ctx.closePath();ink('#E63946',3);ctx.restore();
+ ctx.beginPath();ctx.arc(cx,cy,14,0,TAU);ink('#1a1f33');ctx.beginPath();ctx.arc(cx,cy,5,0,TAU);ctx.fillStyle='#00E5FF';ctx.fill()}
+function draw2(t){
+ const dual=T2.mode==='dual',devs=dual?[0,1]:[0],kind=T2.mode==='B'?'div':'deg',cols=['#00E5FF','#C77DFF'];
+ txt('EXPERIMENT 2 · S = θ / I  ·  S ∝ 1 / I_max',500,26,16,'#00E5FF');
+ devs.forEach((i,j)=>{const L=lay2(j),d=T2.dev[i],Sd=Sdeg(d),raw=Sd*T2.I,over=raw>90.0001,imax=90/Sd;
+  panelBox(L.x,48,L.w,356,'',cols[i]);
+  const name=dual?(i===0?'G₁ · HIGH SENSITIVITY · SMALL RANGE':'G₂ · LOW SENSITIVITY · LARGE RANGE'):(T2.mode==='A'?'CLASSWORK GALVANOMETER · PAGE 12':'CLASSWORK GALVANOMETER · PAGE 29');
+  txt(name,L.cx,72,dual?14:17,cols[i]);
+  txt('F.S.D. = '+fI(imax)+(kind==='div'?'  (25 div)':'  (90°)'),L.cx,98,15,'#FFC93C');
+  drawDialDeg(L.cx,L.cy,L.R,T2.st[i].th,kind,t,over);fxDraw(T2.fx[i]);
+  txt(`I = ${fI(T2.I)}`,L.cx-(dual?95:140),376,20,'#E8F6FF');
+  txt(over?'θ = PEGGED':(kind==='div'?`θ = ${fmt(raw,1)}° = ${fmt(raw/3.6,2)} div`:`θ = ${fmt(raw,1)}°`),L.cx+(dual?85:140),376,20,over?'#FF3B5C':'#FFC93C');
+  txt(`S = ${fS(Sd)}`,L.cx,396,13,cols[i]);
+  if(over&&Math.floor(t*4)%2===0){rr(L.x+20,118,L.w-40,34,8);ink('#6b0f20',3);txt('⚠ OVERLOAD WARNING · I > F.S.D. ⚠',L.cx,135,15,'#FF3B5C')}
+ });
+ panelBox(14,412,972,200,'','#9D4EDD');
+ const x0=100,x1=940,y0=588,y1=452,imaxAx=parseFloat($('s2I').max)*T2.unit,X=I=>x0+(x1-x0)*I/imaxAx,Y=th=>y0-(y0-y1)*th/110;
+ ctx.lineWidth=1;ctx.strokeStyle='rgba(255,255,255,.12)';
+ for(let g=0;g<=90;g+=30){ctx.beginPath();ctx.moveTo(x0,Y(g));ctx.lineTo(x1,Y(g));ctx.stroke();txt(g+'°',x0-10,Y(g),12,'#9fb6c9','right',false)}
+ const un=T2.unit===1e-3?'mA':'μA';
+ for(let g=0;g<=5;g++){const I=imaxAx*g/5;ctx.beginPath();ctx.moveTo(X(I),y0);ctx.lineTo(X(I),y1);ctx.stroke();txt(fmt(I/T2.unit,0),X(I),y0+14,12,'#9fb6c9','center',false)}
+ txt('I ('+un+')',x1-10,y0-14,12,'#9fb6c9','right',false);txt('θ',x0+10,y1-6,13,'#9fb6c9','left',false);
+ ctx.setLineDash([8,6]);ctx.beginPath();ctx.moveTo(x0,Y(90));ctx.lineTo(x1,Y(90));ctx.lineWidth=2;ctx.strokeStyle='#FF3B5C';ctx.stroke();ctx.setLineDash([]);
+ txt('θ_max = 90° (F.S.D.)',x1-4,Y(90)-9,12,'#FF3B5C','right',false);
+ txt('GRAPH: slope of each line = sensitivity S = θ / I',500,430,13,'#C77DFF');
+ devs.forEach(i=>{const Sd=Sdeg(T2.dev[i]),col=cols[i];const iEnd=Math.min(imaxAx,100/Sd);
+  ctx.beginPath();ctx.moveTo(X(0),Y(0));ctx.lineTo(X(iEnd),Y(Sd*iEnd));ctx.lineWidth=9;ctx.strokeStyle='#000';ctx.lineCap='round';ctx.stroke();ctx.lineWidth=4;ctx.strokeStyle=col;ctx.stroke();
+  const imx=90/Sd;if(imx<=imaxAx){ctx.beginPath();ctx.arc(X(imx),Y(90),7,0,TAU);ink(col)}
+  const raw=Sd*T2.I,px=X(T2.I),py=Y(Math.min(raw,110)),ov=raw>90.0001;
+  ctx.save();ctx.shadowColor=ov?'#FF3B5C':col;ctx.shadowBlur=14;ctx.beginPath();ctx.arc(px,py,9,0,TAU);ink(ov&&Math.floor(t*6)%2?'#FF3B5C':'#fff');ctx.restore();
+  txt((dual?'S'+(i+1)+' = ':'S = ')+fS(Sd),clamp(X(iEnd)+8,150,820),clamp(Y(Math.min(Sd*iEnd,100))+(i?12:-12),y1+6,y0-8),12,col,'left')})}
+function hud2(){const devs=T2.mode==='dual'?[0,1]:[0];let h='';
+ const Ss=[];
+ devs.forEach(i=>{const d=T2.dev[i],Sd=Sdeg(d),raw=Sd*T2.I,over=raw>90.0001,imax=90/Sd;Ss.push({Sd,imax});
+  const nm=T2.mode==='dual'?'G'+(i+1):'G';
+  h+=`<div class="rule"><span class="idx">${nm}</span><div>
+  <b class="t">S = θ / I</b> = ${T2.I>0?(over?'<span class="bad">pointer pegged — beyond F.S.D.!</span>':`<code>${fmt(raw,2)}° ÷ ${fI(T2.I)} = ${fS(Sd)}</code>`):'—'}<br>
+  ${T2.mode==='B'?`<code>= ${fmt(Sd/3.6/1e6,4)} div/μA</code> (1 div = 3.6°) · `:`<code>= ${fmt(Sd/1000,Sd/1000>=10?1:3)} °/mA</code> · `}
+  <b class="t">S = B·A·N / k</b> = <code>${fmt(d.B,2)}×${fmt(d.A,1)}e-4×${d.N} / ${fmt(d.k,2)}e-4 = ${fmt(Sd*D2R,1)} rad/A</code><br>
+  F.S.D. <b class="t">I_max = θ_max / S</b> = <code>90° / ${fS(Sd)} = ${fI(imax)}</code> ${T2.mode==='B'?'= <b class="amb">25 div × 50/2 = 625 μA</b>':''}<br>
+  <span class="ok">S × I_max = 90° = constant ✔</span></div></div>`});
+ if(devs.length===2){h+=`<div class="rule"><span class="idx">∝</span><div><b class="t">S ∝ 1 / I_max</b><br><code>S₁ / S₂ = ${fmt(Ss[0].Sd/Ss[1].Sd,2)}</code> · <code>I_max2 / I_max1 = ${fmt(Ss[1].imax/Ss[0].imax,2)}</code><br>${Math.abs(Ss[0].Sd/Ss[1].Sd-Ss[1].imax/Ss[0].imax)<1e-6?'<span class="ok">Equal ratios ⇒ higher sensitivity = smaller range ✔</span>':''}<br>
+  <span class="note">Slide I: θ and I change but S stays <b>constant</b>. Change B, A, N or k (internal parts) ⇒ S changes.</span></div></div>`}
+ else h+=`<div class="rule"><span class="idx">!</span><div class="note">Same device: changing θ or I never changes S. Edit <b>B, A, N, k</b> above to alter S.</div></div>`;
+ $('eqs2').innerHTML=h;
+ let r='';devs.forEach(i=>{if(!T2.rec[i].length)return;r+=`<table><tr><th colspan="4">${devs.length===2?'G'+(i+1):'DEVICE'} — RECORDED READINGS</th></tr><tr><th>#</th><th>I</th><th>θ</th><th>S = θ/I</th></tr>`+
+  T2.rec[i].map((q,n)=>`<tr><td>${n+1}</td><td>${fI(q.I)}</td><td>${fmt(q.th,2)}°</td><td class="ok">${fS(q.S)}</td></tr>`).join('')+'</table>'});
+ $('rec2').innerHTML=r}
+
+/* ============ TAB 3 : AMMETER SHUNT LAB ============ */
+const T3={closed:true,Rg:54,Ig:1,Rs:6,I:10,ph:{m:0,g:0,s:0},fx:newFx(),nd:{th:0,w:0}};
+$('p3').innerHTML=`
+<div class="card"><h3>◈ System Controls — Ammeter Conversion Lab</h3>
+ <div class="seg col" data-id="sw">
+  <button data-v="open">OPEN SHUNT (Pure Galvanometer)</button>
+  <button data-v="closed" class="on warn">CLOSE SHUNT SWITCH (Converted Ammeter)</button></div>
+ ${sl('s3Rg','GALVANOMETER COIL RESISTANCE (R_g)',10,100,1,54)}
+ ${sl('s3Ig','GALVANOMETER MAX CURRENT (I_g)',.01,1,.01,1)}
+ ${sl('s3Rs','SHUNT RESISTANCE (R_s)',.01,50,.01,6)}
+ ${sl('s3I','TOTAL CIRCUIT CURRENT (I)',0,20,.01,10)}
+ <button class="btn" id="auto3" style="width:100%;margin-top:6px">⚙ AUTO-SOLVE R_s = I_g·R_g / (I − I_g)</button>
+ <div class="lbl">Classwork presets</div>
+ <div class="grid2">
+  <button class="btn pre" data-p="1">PRESET 1 (Page 25)<br><small>R_g=54Ω · I_g=1A · I=10A</small></button>
+  <button class="btn pre" data-p="2">PRESET 2 (Page 26)<br><small>R_g=24Ω · n=4 · S÷4</small></button>
+  <button class="btn pre" data-p="3">PRESET 3 (Page 27)<br><small>R_g=36Ω · R_s=4Ω</small></button>
+  <button class="btn pre" data-p="4">PRESET 4 (Page 28)<br><small>I_g=20mA · R_s=0.01R_g</small></button></div>
+ <div class="note" id="note3">Pick a preset or move the sliders.</div>
+</div>
+<div class="card v"><h3>◈ Live Magic Rules HUD</h3><div id="eqs3"></div></div>`;
+const PRE={
+ 1:{Rg:54,Ig:1,I:10,Rs:6,note:'<b>Page 25:</b> R_s = (I_g·R_g)/(I − I_g) = (1×54)/(10−1) = <b>6 Ω</b>'},
+ 2:{Rg:24,Ig:1,I:4,Rs:8,note:'<b>Page 26:</b> sensitivity reduced to ¼ ⇒ n = 4 ⇒ R_s = R_g/(n−1) = 24/3 = <b>8 Ω</b>'},
+ 3:{Rg:36,Ig:1,I:10,Rs:4,note:'<b>Page 27:</b> n = R_g/R_s + 1 = 36/4 + 1 = <b>10</b> ⇒ I_g / I = 10 %'},
+ 4:{Rg:54,Ig:.02,I:2.02,Rs:.54,note:'<b>Page 28:</b> R_s = 0.01·R_g ⇒ n = 100 + 1 = <b>101</b> ⇒ Max I = 101 × 20 mA = <b>2.02 A</b>'}};
+const S3=[['s3Rg','Rg',v=>fmt(v,0)+' Ω'],['s3Ig','Ig',v=>fmt(v,2)+' A'],['s3Rs','Rs',v=>fmt(v,2)+' Ω'],['s3I','I',v=>fmt(v,2)+' A']];
+function setS3(id,key,val,lab){$(id).value=val;T3[key]=parseFloat($(id).value);$(id+'V').textContent=lab(T3[key])}
+function setSwitch(v){T3.closed=v==='closed';document.querySelectorAll('[data-id="sw"] button').forEach(b=>b.classList.toggle('on',b.dataset.v===v))}
+function bind3(){
+ S3.forEach(([id,key,lab])=>{const el=$(id);const u=()=>{T3[key]=parseFloat(el.value);$(id+'V').textContent=lab(T3[key]);document.querySelectorAll('[data-p]').forEach(b=>b.classList.remove('on'))};el.addEventListener('input',u);$(id+'V').textContent=lab(parseFloat(el.value))});
+ document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const p=PRE[b.dataset.p];S3.forEach(([id,key,lab])=>setS3(id,key,p[key],lab));
+  document.querySelectorAll('[data-p]').forEach(x=>x.classList.toggle('on',x===b));$('note3').innerHTML=p.note;setSwitch('closed')});
+ $('auto3').onclick=()=>{if(T3.I>T3.Ig){setS3('s3Rs','Rs',clamp(T3.Ig*T3.Rg/(T3.I-T3.Ig),.01,50),S3[2][2]);setSwitch('closed')}else $('note3').innerHTML='<span class="bad">Need I &gt; I_g to design a shunt.</span>'}}
+function calc3(){const s=T3;let Iga,Is,RA;
+ if(s.closed){Iga=s.I*s.Rs/(s.Rg+s.Rs);Is=s.I-Iga;RA=s.Rg*s.Rs/(s.Rg+s.Rs)}else{Iga=s.I;Is=0;RA=s.Rg}
+ const n=s.closed?s.Rg/s.Rs+1:1;return{Iga,Is,RA,V:Iga*s.Rg,n,range:n*s.Ig,over:Iga>s.Ig*1.0005}}
+const PTH={m:[[760,215],[880,215],[880,420],[110,420],[110,215],[300,215]],g:[[300,215],[300,130],[760,130],[760,215]],s:[[300,215],[300,300],[760,300],[760,215]]};
+for(const k in PTH){const p=PTH[k];let c=[0];for(let i=1;i<p.length;i++)c.push(c[i-1]+Math.hypot(p[i][0]-p[i-1][0],p[i][1]-p[i-1][1]));PTH[k]={p,c,len:c[c.length-1]}}
+function atP(P,d){let i=1;while(i<P.c.length-1&&P.c[i]<d)i++;const f=(d-P.c[i-1])/(P.c[i]-P.c[i-1]);return[P.p[i-1][0]+(P.p[i][0]-P.p[i-1][0])*f,P.p[i-1][1]+(P.p[i][1]-P.p[i-1][1])*f]}
+function step3(dt){const c=calc3();
+ [['m',T3.I],['g',c.Iga],['s',c.Is]].forEach(([k,cur])=>{const fr=Math.sqrt(Math.min(1,cur/20));T3.ph[k]+=(40+170*fr)*dt});
+ const tg=Math.min(c.Iga/T3.Ig*90,100),s=T3.nd,w0=13,z=.5,n=Math.max(1,Math.ceil(dt/.005)),h=dt/n;
+ for(let k=0;k<n;k++){const a=w0*w0*(tg-s.th)-2*z*w0*s.w;s.w+=a*h;s.th+=s.w*h}s.th=clamp(s.th,0,100);
+ if(c.over)fxEmit(T3.fx,440,100,dt);fxUpdate(T3.fx,dt)}
+function wire(pts,w,col){const path=()=>{ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i][0],pts[i][1])};
+ ctx.lineJoin='round';ctx.lineCap='round';path();ctx.lineWidth=w+6;ctx.strokeStyle='#000';ctx.stroke();path();ctx.lineWidth=w;ctx.strokeStyle='#1b2540';ctx.stroke();
+ if(col){ctx.save();ctx.shadowColor=col;ctx.shadowBlur=14;path();ctx.lineWidth=Math.max(3,w*.55);ctx.strokeStyle=col;ctx.stroke();ctx.restore()}}
+function flow(P,cur,ph,col){if(cur<=1e-6)return;const fr=Math.sqrt(Math.min(1,cur/20)),sp=14+90*Math.pow(1-fr,2);
+ ctx.save();ctx.shadowColor=col;ctx.shadowBlur=10;ctx.fillStyle='#fff';const r=3+3.5*fr;
+ for(let d=ph%sp;d<P.len;d+=sp){const q=atP(P,d);ctx.beginPath();ctx.arc(q[0],q[1],r,0,TAU);ctx.fill()}ctx.restore()}
+function zig(x1,x2,y,col){const n=7,a=15,w=(x2-x1)/n;ctx.beginPath();ctx.moveTo(x1-14,y);ctx.lineTo(x1,y);for(let i=0;i<n;i++)ctx.lineTo(x1+w*(i+.5),y+(i%2?a:-a));ctx.lineTo(x2,y);ctx.lineTo(x2+14,y);
+ ctx.lineJoin='round';ctx.lineWidth=11;ctx.strokeStyle='#000';ctx.stroke();ctx.lineWidth=5;ctx.strokeStyle=col;ctx.stroke()}
+function draw3(t){const c=calc3(),s=T3,cl=s.closed;
+ txt('EXPERIMENT 3 · I = I_g + I_s  ·  V_g = V_s  ·  R_A = R_g·R_s / (R_g + R_s)',500,26,15,'#00E5FF');
+ panelBox(14,44,972,376,'');
+ const fr=v=>clamp(v/Math.max(s.I,1e-9),0,1);
+ ctx.setLineDash([10,7]);rr(262,78,566,276,16);ctx.lineWidth=2.5;ctx.strokeStyle=cl?'#9D4EDD':'#FF3B5C';ctx.stroke();ctx.setLineDash([]);
+ txt(cl?`CONVERTED AMMETER · R_A = ${fmt(c.RA,3)} Ω`:'PURE GALVANOMETER (shunt open)',545,366,14,cl?'#C77DFF':'#FF3B5C');
+ wire(PTH.m.p,20,s.I>0?'#00E5FF':null);
+ wire(PTH.g.p,6+14*fr(c.Iga),c.Iga>0?'#B56BFF':null);
+ wire(PTH.s.p,6+14*fr(c.Is),c.Is>1e-6?'#39FF88':null);
+ flow(PTH.m,s.I,s.ph.m,'#00E5FF');flow(PTH.g,c.Iga,s.ph.g,'#B56BFF');flow(PTH.s,c.Is,s.ph.s,'#39FF88');
+ // battery
+ ctx.fillStyle='#101523';ctx.fillRect(425,394,110,52);
+ wire([[425,420],[480,420]],6);wire([[498,420],[535,420]],6);
+ ctx.beginPath();ctx.moveTo(480,398);ctx.lineTo(480,442);ctx.lineWidth=9;ctx.strokeStyle='#000';ctx.lineCap='round';ctx.stroke();ctx.lineWidth=5;ctx.strokeStyle='#fff';ctx.stroke();
+ ctx.beginPath();ctx.moveTo(498,408);ctx.lineTo(498,432);ctx.lineWidth=9;ctx.strokeStyle='#000';ctx.stroke();ctx.lineWidth=5;ctx.strokeStyle='#9fb6c9';ctx.stroke();
+ txt('+',462,404,18,'#FF3B5C');txt('−',515,404,18,'#00E5FF');txt('DC SOURCE',480,458,11,'#9fb6c9');
+ [[300,215],[760,215]].forEach(p=>{ctx.beginPath();ctx.arc(p[0],p[1],9,0,TAU);ink('#00E5FF')});
+ txt('A',282,236,15,'#00E5FF');txt('B',778,236,15,'#00E5FF');
+ // galvanometer branch
+ ctx.fillStyle='#101523';ctx.fillRect(536,112,160,36);zig(550,680,130,'#B56BFF');
+ txt(`R_g = ${fmt(s.Rg,0)} Ω`,615,96,14,'#C77DFF');
+ const gx=440,gy=130,over=c.over;
+ ctx.save();if(over){ctx.shadowColor='#FF3B5C';ctx.shadowBlur=24}ctx.beginPath();ctx.arc(gx,gy,46,0,TAU);ink('#F3ECD2',4);ctx.restore();
+ for(let v=0;v<=10;v++){const a=(-135+v*9)*D2R;ctx.beginPath();ctx.moveTo(gx+Math.cos(a)*38,gy+14+Math.sin(a)*38);ctx.lineTo(gx+Math.cos(a)*30,gy+14+Math.sin(a)*30);ctx.lineWidth=v%5?1.5:3;ctx.strokeStyle='#111';ctx.stroke()}
+ ctx.save();ctx.translate(gx,gy+14);ctx.rotate((-135+s.nd.th+(over?Math.sin(t*70)*1.5:0))*D2R);ctx.beginPath();ctx.moveTo(-8,-2);ctx.lineTo(36,0);ctx.lineTo(-8,2);ctx.closePath();ink('#E63946',2.5);ctx.restore();
+ ctx.beginPath();ctx.arc(gx,gy+14,5,0,TAU);ink('#1a1f33',2);txt('G',gx,gy-24,16,'#222','center',false);
+ txt('GALVANOMETER',gx,192,12,'#C77DFF');
+ txt(`I_g = ${fmt(c.Iga,c.Iga<.1?4:3)} A`,330,100,15,'#C77DFF','left');
+ // shunt branch
+ ctx.fillStyle='#101523';ctx.fillRect(376,282,110,38);ctx.fillRect(516,282,170,38);
+ ctx.beginPath();ctx.arc(390,300,8,0,TAU);ink('#fff');ctx.beginPath();ctx.arc(472,300,8,0,TAU);ink('#fff');
+ ctx.beginPath();ctx.moveTo(390,300);ctx.lineTo(cl?472:462,cl?300:256);ctx.lineWidth=10;ctx.strokeStyle='#000';ctx.lineCap='round';ctx.stroke();ctx.lineWidth=5;ctx.strokeStyle=cl?'#39FF88':'#FF3B5C';ctx.stroke();
+ wire([[480,300],[516,300]],6,cl&&c.Is>1e-6?'#39FF88':null);
+ zig(530,670,300,'#39FF88');
+ txt(`R_s = ${fmt(s.Rs,2)} Ω`,600,268,14,'#39FF88');txt('SHUNT SWITCH '+(cl?'[CLOSED]':'[OPEN]'),431,334,12,cl?'#39FF88':'#FF3B5C');
+ txt(`I_s = ${fmt(c.Is,2)} A`,750,332,15,'#39FF88','right');
+ txt(`I = ${fmt(s.I,2)} A`,128,330,18,'#00E5FF','left');
+ txt('V_g = V_s',530,208,18,'#FFC93C');txt(`= ${fmt(c.V,2)} V`,530,232,18,'#FFC93C');
+ fxDraw(T3.fx);
+ if(over&&Math.floor(t*4)%2===0){rr(120,52,300,28,8);ink('#6b0f20',3);txt('⚠ OVERLOAD · I_g > I_g(max)',270,67,14,'#FF3B5C')}
+ // comparison bars
+ panelBox(14,430,972,182,'','#9D4EDD');
+ const grp=(x,title,items,chk)=>{txt(title,x+235,452,14,'#C77DFF');const mx=Math.max(...items.map(i=>i.v),1e-9);
+  items.forEach((it,i)=>{const y=486+i*34,w=Math.max(6,300*it.v/mx);txt(it.l,x+60,y,15,it.c,'right');rr(x+70,y-11,w,22,6);ink(it.c,3);ctx.fillStyle='rgba(255,255,255,.3)';ctx.fillRect(x+76,y-8,Math.max(0,w-12),5);txt(it.t,x+70+w+8,y,13,'#fff','left')});
+  txt(chk.t,x+235,592,15,chk.ok?'#39FF88':'#FF3B5C')};
+ const okR=cl&&s.Rg>s.Rs&&s.Rs>c.RA,okI=cl&&c.Iga<c.Is&&c.Is<s.I;
+ grp(24,'RESISTANCE (Ω)',[{l:'R_g',v:s.Rg,c:'#B56BFF',t:fmt(s.Rg,2)+' Ω'},{l:'R_s',v:cl?s.Rs:0,c:'#39FF88',t:cl?fmt(s.Rs,2)+' Ω':'open'},{l:'R_A',v:c.RA,c:'#00E5FF',t:fmt(c.RA,3)+' Ω'}],{ok:okR||!cl,t:cl?(okR?'R_g > R_s > R_A  ✔':'R_g > R_s > R_A  ✘ (R_s too big)'):'SHUNT OPEN: R_A = R_g'});
+ grp(504,'CURRENT (A)',[{l:'I_g',v:c.Iga,c:'#B56BFF',t:fmt(c.Iga,3)+' A'},{l:'I_s',v:c.Is,c:'#39FF88',t:fmt(c.Is,2)+' A'},{l:'I_A',v:s.I,c:'#00E5FF',t:fmt(s.I,2)+' A'}],{ok:okI||!cl,t:cl?(okI?'I_g < I_s < I_A  ✔':'I_g < I_s < I_A  ✘ (shunt not small enough)'):'SHUNT OPEN: all current through G'})}
+function hud3(){const s=T3,c=calc3(),cl=s.closed;
+ const Rsd=s.I>s.Ig?s.Ig*s.Rg/(s.I-s.Ig):NaN,nI=s.I/s.Ig,nR=s.Rg/s.Rs+1;
+ const match=isFinite(Rsd)&&Math.abs(Rsd-s.Rs)/Math.max(Rsd,1e-9)<.015;
+ const Sg=90/s.Ig;
+ $('eqs3').innerHTML=`
+ <div class="rule"><span class="idx">1</span><div><b class="t">Voltage Equality: V_g = V_s ⇒ I_g·R_g = I_s·R_s</b><br>
+ <code>${fmt(c.Iga,3)} × ${fmt(s.Rg,1)} = ${fmt(c.Iga*s.Rg,2)} V</code> &nbsp;|&nbsp; <code>${fmt(c.Is,3)} × ${fmt(s.Rs,2)} = ${cl?fmt(c.Is*s.Rs,2):'—'} V</code> ${cl?'<span class="ok">✔ equal</span>':'<span class="amb">(shunt open)</span>'}</div></div>
+ <div class="rule"><span class="idx">2</span><div><b class="t">Shunt Formula: R_s = (I_g·R_g) / (I − I_g)</b><br>
+ ${isFinite(Rsd)?`<code>(${fmt(s.Ig,3)} × ${fmt(s.Rg,1)}) / (${fmt(s.I,2)} − ${fmt(s.Ig,3)}) = ${fmt(Rsd,3)} Ω</code> ${match?'<span class="ok">✔ matches your R_s</span>':`<span class="amb">your R_s = ${fmt(s.Rs,2)} Ω</span>`}`:'<span class="bad">Needs I &gt; I_g</span>'}</div></div>
+ <div class="rule"><span class="idx">3</span><div><b class="t">Magic Multiplier: n = I / I_g = R_g/R_s + 1 ⇒ R_g = (n−1)·R_s</b><br>
+ <code>n = ${fmt(nI,2)}</code> (from currents) · <code>n = ${fmt(s.Rg,1)}/${fmt(s.Rs,2)} + 1 = ${fmt(nR,2)}</code><br>
+ <code>R_g = (${fmt(nR,2)}−1) × ${fmt(s.Rs,2)} = ${fmt((nR-1)*s.Rs,2)} Ω</code> · I_g/I = <b class="amb">${fmt(100*(cl?c.Iga/Math.max(s.I,1e-9):1),1)}%</b><br>
+ ${cl?`Range ×${fmt(c.n,2)} ⇒ Max I = n·I_g = <b class="amb">${fmt(c.range,3)} A</b>`:'<span class="amb">Shunt open: n = 1, range = I_g</span>'}</div></div>
+ <div class="rule"><span class="idx">4</span><div><b class="t">Total Ammeter Resistance: R_A = (R_g·R_s)/(R_g+R_s)</b><br>
+ <code>(${fmt(s.Rg,1)} × ${fmt(s.Rs,2)}) / (${fmt(s.Rg,1)} + ${fmt(s.Rs,2)}) = ${fmt(s.Rg*s.Rs/(s.Rg+s.Rs),3)} Ω</code> ${cl?'<span class="ok">R_A &lt; R_s &lt; R_g</span>':'<span class="amb">(open: R_A = R_g)</span>'}</div></div>
+ <div class="rule"><span class="idx">5</span><div><b class="t">New Ammeter Sensitivity: S_ammeter = S_galv / n</b><br>
+ <code>S_galv = 90° / ${fmt(s.Ig,3)} A = ${fmt(Sg,1)} °/A</code><br><code>S_ammeter = ${fmt(Sg,1)} / ${fmt(c.n,2)} = ${fmt(Sg/c.n,2)} °/A</code> (${fmt(100/c.n,1)}% of original)</div></div>
+ ${c.over?'<div class="status peg">⚠ GALVANOMETER OVERLOAD — I_g EXCEEDS I_g(max)! '+(cl?'Lower R_s or reduce I.':'Close the shunt switch!')+'</div>':`<div class="status ${cl?'lock':'move'}" style="animation:none">${cl?'✔ COIL PROTECTED — SHUNT TAKES '+fmt(100*c.Is/Math.max(s.I,1e-9),1)+'% OF I':'… SHUNT OPEN — ALL CURRENT FLOWS THROUGH THE COIL'}</div>`}`}
+
+/* ============ INIT / LOOP ============ */
+document.addEventListener('click',e=>{const b=e.target.closest('.seg button');if(!b)return;const sg=b.parentElement,id=sg.dataset.id;
+ if(id==='pole'||id==='core'||id==='sw'){sg.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
+  if(id==='sw'){setSwitch(b.dataset.v);document.querySelectorAll('[data-p]').forEach(x=>x.classList.remove('on'))}else seg1[id](b.dataset.v)}});
+let tab=1;
+function hud(){tab===1?hud1():tab===2?hud2():hud3()}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{tab=+b.dataset.tab;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===b));
+ for(let i=1;i<=3;i++)$('p'+i).classList.toggle('on',i===tab);document.querySelector('.side').scrollTop=0;resize();hud()});
+bindSl1();bind2();bind3();resize();window.addEventListener('resize',resize);
+if(window.ResizeObserver)new ResizeObserver(resize).observe(cv.parentElement);
+let last=performance.now(),acc=0,T=0;
+function loop(now){const dt=Math.min(.05,(now-last)/1000);last=now;T+=dt;acc+=dt;
+ beginFrame();
+ if(tab===1){step1(dt);draw1(T)}else if(tab===2){step2(dt);draw2(T)}else{step3(dt);draw3(T)}
+ if(acc>.06){acc=0;hud()}
+ requestAnimationFrame(loop)}
+hud();requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
